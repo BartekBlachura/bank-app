@@ -1,0 +1,47 @@
+1)Wejdz w File -> Project Structure
+2) Wejdz w zakladke Libraries, kliknij + wybierz Java
+3) Znajdz na rozwijalnej liscie bank-app\lib\mysql-connector-java-8.0.29.jar
+4) Wybierz mysql-connector-java-8.0.29.jar (klikając OK)
+5) potwierdz OK
+6) w dolnym prawym rogu kliknij Apply + OK
+7) sprawdz polaczenie -
+  7a)Wejdz do klasy JDBC.java uruchom Main lub 
+  7a)wejdz do klasy SQL_driver.java dodaj testowo poniższy kod i uruchom (powinno wypisac: nr konta: null haslo: haslo login: login saldo: 54.0).
+  
+  
+public Customer_DB ReturnClient_test(String login) throws SQLException {
+        String querry = "Select * from Klient_test where login= ?";
+        PreparedStatement ps = conn.prepareStatement(querry);
+        ps.setString(1, login);
+        Customer_DB klient_fromDB = new Customer_DB();
+        ResultSet rs = ps.executeQuery();
+        boolean check = false;
+
+        while (rs.next()) {
+            check = true;
+            klient_fromDB.setUserName(rs.getString("login"));
+            klient_fromDB.setPassHash(rs.getString("haslo_hash"));
+            klient_fromDB.setAccountNo(rs.getString("nr_konta"));
+            klient_fromDB.setBalance(rs.getDouble("saldo"));
+        }
+
+        if (check == true) {
+            return klient_fromDB;
+        } else {
+            return null;
+        }
+    }
+
+    public static void main(String[] args) {
+        SQL_driver test = new SQL_driver();
+        Customer_DB testowy = new Customer_DB();
+        try {
+            testowy  = test.ReturnClient_test("login");
+            System.out.println("nr konta: "+testowy.getAccountNo());
+            System.out.println("haslo: "+testowy.getPassHash());
+            System.out.println("login: "+testowy.getUserName());
+            System.out.println("saldo: "+testowy.getBalance());
+        }catch(Exception e){
+
+        }
+    } 
